@@ -1,0 +1,100 @@
+@charset "UTF-8";
+* {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      padding: 20px;
+      line-height: 1.5;
+    }
+    .chat-container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    /* チャットエリア */
+    .chat-area {
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+    /* 個々のチャットメッセージ */
+    .chat-message {
+      display: flex;
+      margin-bottom: 15px;
+    }
+    /* 発言者のラベル */
+    .chat-sender {
+      min-width: 80px;
+      padding: 10px;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 8px;
+      background-color: #333333;
+    }
+    /* 発言内容（チャットバブル） */
+    .chat-content {
+      max-width: 70%;
+      margin-left: 10px;
+      padding: 10px 15px;
+      border-radius: 15px;
+      background-color: #2a2a2a;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      word-wrap: break-word;
+    }
+    /* ユーザー側（送信者）のスタイル：右寄せ */
+    .chat-message.user {
+      flex-direction: row-reverse;
+    }
+    .chat-message.user .chat-sender {
+      background-color: #4a90e2;
+      color: #fff;
+    }
+    .chat-message.user .chat-content {
+      margin-right: 10px;
+      margin-left: 0;
+      background-color: #3a3a3a;
+    }
+    /* 入力フォームのスタイル */
+    form {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+    form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    form input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background-color: #2a2a2a;
+      color: #e0e0e0;
+    }
+    form button {
+      background-color: #4a90e2;
+      color: #fff;
+      border: none; 
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s ease;
+    }
+    form button:hover {
+      background-color: #357ab8;
+    }
+	#map {
+	    height: 500px;
+	    width: 100%;
+	}
