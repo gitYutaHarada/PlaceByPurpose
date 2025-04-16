@@ -2,8 +2,8 @@ package com.example.demo.service.openAI;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
@@ -14,13 +14,26 @@ import com.theokanning.openai.service.OpenAiService;
 @Service
 public class OpenAIServiceImpl implements OpenAIService {
 	
+    @Value("${openai.token}")
+    private String token;
+    
+    @Value("${openai.model}")
+    private String model;
+    
+    @Value("${openai.maxTokens}")
+    private String maxTokens;
+    
+    @Value("${openai.temperature}")
+    private String temperature;
+	
 	public String ChatGPT(String minutes, String purpose) {
 		
-        ResourceBundle config = ResourceBundle.getBundle("application");
-        String token = config.getString("openai.token");
-        String model = config.getString("openai.model");
-        int maxTokens = Integer.valueOf(config.getString("openai.maxTokens"));
-        Double temperature = Double.valueOf(config.getString("openai.temperature"));
+//        ResourceBundle config = ResourceBundle.getBundle("application");
+//        String token = config.getString("openai.token");
+//        String model = config.getString("openai.model");
+//        int maxTokens = Integer.valueOf(config.getString("openai.maxTokens"));
+//        Double temperature = Double.valueOf(config.getString("openai.temperature"));
+        
         OpenAiService openAiService = new OpenAiService(token);
         
         List<ChatMessage> messages = new ArrayList<>();

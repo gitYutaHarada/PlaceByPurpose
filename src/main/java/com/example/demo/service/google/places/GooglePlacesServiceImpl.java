@@ -3,9 +3,9 @@ package com.example.demo.service.google.places;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,11 +15,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+
+
 @Service
 public class GooglePlacesServiceImpl implements GooglePlacesService {
 	
-    ResourceBundle config = ResourceBundle.getBundle("application");
-    String key = config.getString("google.api.key");
+//    ResourceBundle config = ResourceBundle.getBundle("application");
+//    String key = config.getString("google.api.key");
+	
+	@Value("${google.api.key}")
+	private String key;
+	
     String baseUrl = "https://maps.googleapis.com/maps/api/place/textsearch/json";
 
     private final RestTemplate restTemplate = new RestTemplate();
