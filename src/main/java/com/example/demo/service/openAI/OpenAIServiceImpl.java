@@ -21,10 +21,10 @@ public class OpenAIServiceImpl implements OpenAIService {
     private String model;
     
     @Value("${openai.maxTokens}")
-    private String maxTokens;
+    private int maxTokens;
     
     @Value("${openai.temperature}")
-    private String temperature;
+    private double temperature;
 	
 	public String ChatGPT(String minutes, String purpose) {
 		
