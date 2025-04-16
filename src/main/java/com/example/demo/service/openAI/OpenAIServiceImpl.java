@@ -14,7 +14,7 @@ import com.theokanning.openai.service.OpenAiService;
 @Service
 public class OpenAIServiceImpl implements OpenAIService {
 	
-	public String ChatGPT(String range, String purpose) {
+	public String ChatGPT(String minutes, String purpose) {
 		
         ResourceBundle config = ResourceBundle.getBundle("application");
         String token = config.getString("openai.token");
@@ -24,12 +24,9 @@ public class OpenAIServiceImpl implements OpenAIService {
         OpenAiService openAiService = new OpenAiService(token);
         
         List<ChatMessage> messages = new ArrayList<>();
-        String chat = "淵野辺駅から徒歩" + range + "分以内での場所を探しています。\n"
-        		+ "徒歩" + range + "分というのはGooglemapの実測値をベースにしてください\n"
+        String chat = "検索クエリを複数立てて、段階的に絞り込みつつ、広範囲な情報を総当たりで収集してください\n"
         		+ "\n"
-        		+ "また、検索クエリを複数立てて、段階的に絞り込みつつ、広範囲な情報を総当たりで収集してください\n"
-        		+ "\n"
-        		+ "目的 → 行動 → 条件 → 場所（複数）のようにステップごとに考えるとよい考えにたどり着りつくと思います。\n"
+        		+ "目的 → 行動 → 条件 → 場所（複数）のようにステップごとに考えてください。\n"
         		+ "例えば以下のようにマッピングします：\n"
         		+ "\n"
         		+ "「ギターの練習をしたい」\n"
@@ -80,17 +77,32 @@ public class OpenAIServiceImpl implements OpenAIService {
         		+ "\n"
         		+ "このように、やりたいこと（目的）に最適な場所カテゴリを推測してください。　\n"
         		+ "\n"
+        		+ "その後、検索する際に１つの仮説を立てて検索します。\n"
+        		+ "１.単語レベルでの拡張\n"
+        		+ "例えば、ギターの練習と検索した際にウクレレの練習ができる場所ではギターの練習が出るという仮説です。ギターとウクレレ辞書的にも意味が近いので拡張できると仮定します。\n"
+        		+ "\n"
         		+ "その後、\n"
-        		+ "1今後Places APIで検索する際、先ほど考えた場所カテゴリが出力されるようなキーワードを考えてください\n"
-        		+ "2以下のJSON形式で出力してください。\n"
+        		+ "1今後Google Places APIで検索する際、先ほど考えた場所カテゴリが出力されるようなキーワードを考えてください。\n"
+        		+ "2考えたキーワードの英語を考えてください。\n"
+        		+ "3考えたキーワードに当てはまるGoogle Places APIで使用されているtypes属性があればそれをkeyword属性として出力してください\n"
+        		+ "4以下のJSON形式で出力してください。\n"
         		+ "\n"
         		+ "\n"
         		+ "{\n"
         		+ "    \"keyword\": [\"水\",\"water\", ...]\n"
         		+ "}\n"
         		+ "\n"
-        		+ "JSONのみ返してください\n"
-        		+ "出力してくださった文字列をそのままString型からJSON型に変換するのでエラーにならないようにJSON型を出力してください\n"
+        		+ "\n"
+        		+ "注意点\n"
+        		+ "１例えばピザの注文と目的を考えた際にキーワードに「デリバリー」となってしまう場合がないようにしてください。この後GooglePlaceAPIでtextsearchをするのでデリバリーが来ると車屋さんなどの目的：ピザの注文とはかけ離れた検索結果が出てしまいます。このことを考えてキーワードを出力してください\n"
+        		+ "２例えば目的：ピザの注文ではピザ屋だけでなくイタリアンレストランでも注文できる可能性があります。そのようなことを幅広く考えてキーワードを出力してください\n"
+        		+ "３JSONのみ返してください.。文章や説明は不要です。\n"
+        		+ "４マークダウンのコードブロックは無しで書いてください。\n"
+        		+ "５出力してくださった文字列をそのままString型からJSON型に変換するのでエラーにならないようにJSON型を出力してください\n"
+        		+ "６例えばトイレに行きたいときよくコンビニが使用されることがあります。その目的によく使用される際はキーワードとして挙げてください\n"
+        		+ "７これまで上げたキーワードをもう一度見返してみてそのキーワードの具体的な名前をたくさん追加してください。"
+        		+ "（例：寿司屋→スシロー、くら寿司…）\n"
+        		+ "８その後もう一度キーワードを見返してすべてのキーワードの英語を追加してください\n"
         		+ "\n"
         		+ "目的：" + purpose;
         

@@ -1,6 +1,5 @@
 function map() {
-	
-    const centerLocation = mapDataJson[0];
+    const centerLocation =  allPlacesJson.results[0].location;
 
     const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 12,
@@ -9,19 +8,21 @@ function map() {
 	
 	const infoWindow = new google.maps.InfoWindow();
 	
-	mapDataJson.forEach(mapData => {
+	const results = allPlacesJson.results;
+	
+	results.forEach(mapData => {
 		
 		const marker = new google.maps.Marker({
-		    position: {lat: mapData.lat, lng:mapData.lng},
+		    position: {lat: mapData.location.lat, lng:mapData.location.lng},
 		    map: map,
-			title: mapData.facilityName
+			title: mapData.name
 		}); 
 		
 		marker.addListener("click", () => {
 		    infoWindow.setContent(`
 				<div style="color: black;">
-					<strong>施設名：${mapData.facilityName}</strong><br>
-					<strong>住所：${mapData.address}</strong><br>
+					<strong>施設名：${mapData.name}</strong><br>
+					<strong>住所：${mapData.formatted_address}</strong><br>
 				</div>
 			`);
 		    infoWindow.open(map, marker);
