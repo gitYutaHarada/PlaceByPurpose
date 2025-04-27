@@ -39,7 +39,7 @@ public class OpenAIServiceImpl implements OpenAIService {
         List<ChatMessage> messages = new ArrayList<>();
         String chat = "検索クエリを複数立てて、段階的に絞り込みつつ、広範囲な情報を総当たりで収集してください\n"
         		+ "\n"
-        		+ "目的 → 行動 → 条件 → 場所（複数）のようにステップごとに考えてください。\n"
+        		+ "目的 → 行動(複数) → 条件（複数） → 場所（複数）のようにステップごとに考えてください。\n"
         		+ "例えば以下のようにマッピングします：\n"
         		+ "\n"
         		+ "「ギターの練習をしたい」\n"

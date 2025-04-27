@@ -6,16 +6,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.dto.CenterCandidateListDto;
+import com.example.demo.dto.MapDataDto;
 import com.example.demo.service.google.places.GooglePlacesService;
 import com.example.demo.service.json.JsonOthersService;
 import com.example.demo.service.json.JsonUtilsService;
 import com.example.demo.service.openAI.OpenAIService;
 import com.example.demo.service.range.RangeService;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,13 +36,35 @@ public class ResponseController {
 	@Value("${google.api.key}")
 	private String googleApiKey;
 	
+	@PostMapping("/search-center")
+	public String searchCenter(@RequestParam String centerName,
+							   Model model) {
+		
+		//centerNameでtextsearchで検索して、DTO（placeId、地名、住所、緯度、経度）を返す。
+		ObjectNode centerCandidateListObjectNode = googlePlacesService.searchCenterCandidate(centerName);
+		CenterCandidateListDto centerCandidateListDto = jsonOthersService.JsonToCenterCandidateListDto(centerCandidateListObjectNode);
+
+		System.out.println(centerCandidateListDto);
+		model.addAttribute("centerCandidateListDto", centerCandidateListDto.getCenterCandidateListDto());
+		
+		return "index";
+	}
+	
+	@PostMapping("/select-center")
+	public String selectCenter(@ModelAttribute MapDataDto mapDataDto,
+							   Model model){
+		model.addAttribute("centerDataDto", mapDataDto);
+		return "index";
+	}
+	
 	@GetMapping("/")
 	public String getMapping() {
 		return "index";
 	}
 	
 	@PostMapping("/")
-	public String response(@RequestParam String minutes, 
+	public String response(@ModelAttribute MapDataDto centerDataDto,
+						   @RequestParam String minutes, 
 						   @RequestParam String purpose, 
 						   Model model,
 						   RedirectAttributes redirectAttributes){
@@ -54,7 +80,7 @@ public class ResponseController {
 		
 		int radiusMeters = rangeService.calculateRadiusMeters("徒歩", Integer.parseInt(minutes));
 		//淵野辺駅の緯度経度
-		double lat = 35.5684909, lng = 139.3952879;
+		double lat = centerDataDto.getLat(), lng = centerDataDto.getLng();
 		//キーワードをもとにGooglePlaceAPIで場所検索,検索した結果がすべてJson形式のString型で返される。
 		String allPlacesString = 
 				googlePlacesService.searchAllPlacesByTypeKeywordList(
@@ -63,11 +89,6 @@ public class ResponseController {
 						lat, 
 						lng, 
 						radiusMeters);
-				
-		System.out.println(keywordList.toString());
-		System.out.println(radiusMeters);
-		System.out.println(purpose);
-		
 		
 		redirectAttributes.addFlashAttribute("allPlacesString", allPlacesString);
 	    redirectAttributes.addFlashAttribute("googleApiKey", googleApiKey);

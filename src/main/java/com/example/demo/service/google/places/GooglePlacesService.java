@@ -15,4 +15,9 @@ public interface GooglePlacesService {
 	boolean isValidPlace(JsonNode place, List<String> typeList);
 	
 	ObjectNode extractPlaceInfo(JsonNode place, ObjectMapper mapper);
+
+	ObjectNode searchCenterCandidate(String centerName);
+	
+	String searchPlacesByOnlyKeyword(String keyword);
+	
 }

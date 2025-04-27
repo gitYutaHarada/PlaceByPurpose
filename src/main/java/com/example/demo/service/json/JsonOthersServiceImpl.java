@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.CenterCandidateDto;
+import com.example.demo.dto.CenterCandidateListDto;
 import com.example.demo.dto.MapDataDto;
 import com.example.demo.dto.MapDataListDto;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Service
 public class JsonOthersServiceImpl implements JsonOthersService {
@@ -53,6 +56,26 @@ public class JsonOthersServiceImpl implements JsonOthersService {
 			}
 		}
 		return typeList;
+	}
+
+	@Override
+	public CenterCandidateListDto JsonToCenterCandidateListDto(ObjectNode objectNode) {
+		JsonNode results = objectNode.get("results");
+		CenterCandidateListDto centerCandidateListDto = new CenterCandidateListDto();
+		
+		for(JsonNode result : results) {
+			CenterCandidateDto centerCandidateDto = new CenterCandidateDto();
+			centerCandidateDto.setFacilityName(result.get("name").asText());
+			centerCandidateDto.setAddress(result.get("formatted_address").asText());
+			if(result.has("location")) {
+				JsonNode location = result.get("location");
+				centerCandidateDto.setLat(location.get("lat").asDouble());
+				centerCandidateDto.setLng(location.get("lng").asDouble());
+			}
+			centerCandidateListDto.add(centerCandidateDto);
+		}
+		
+		return centerCandidateListDto;
 	}
 
 }
