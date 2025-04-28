@@ -66,9 +66,9 @@ public class ResponseController {
 	public String response(@ModelAttribute MapDataDto centerDataDto,
 						   @RequestParam String minutes, 
 						   @RequestParam String purpose, 
+						   @RequestParam String transportation,
 						   Model model,
 						   RedirectAttributes redirectAttributes){
-		
 		
 		//GPTAPIからキーワード文字列を取得
 		String typeKeywordSetString = openAIService.ChatGPT(minutes, purpose);	
@@ -78,7 +78,7 @@ public class ResponseController {
 		List<String> keywordList = jsonOthersService.JsonToListForKeyword(typeKeywordSetJson);
 		List<String> typeList = jsonOthersService.JsonToListForType(typeKeywordSetJson);	
 		
-		int radiusMeters = rangeService.calculateRadiusMeters("徒歩", Integer.parseInt(minutes));
+		int radiusMeters = rangeService.calculateRadiusMeters(transportation, Integer.parseInt(minutes));
 		//淵野辺駅の緯度経度
 		double lat = centerDataDto.getLat(), lng = centerDataDto.getLng();
 		//キーワードをもとにGooglePlaceAPIで場所検索,検索した結果がすべてJson形式のString型で返される。
@@ -90,6 +90,9 @@ public class ResponseController {
 						lng, 
 						radiusMeters);
 		
+		if(allPlacesString.trim().isEmpty()) {
+			redirectAttributes.addFlashAttribute("allPlacesIsEmpty", "検索した結果見つかりませんでした。");
+		}
 		redirectAttributes.addFlashAttribute("allPlacesString", allPlacesString);
 	    redirectAttributes.addFlashAttribute("googleApiKey", googleApiKey);
 		

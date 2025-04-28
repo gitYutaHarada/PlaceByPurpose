@@ -98,3 +98,7 @@
 	    height: 500px;
 	    width: 100%;
 	}
+	
+	.transportation-minutes{
+		display: flex;
+	}

@@ -6,11 +6,19 @@ import org.springframework.stereotype.Service;
 public class RangeServiceImpl implements RangeService {
 
 	@Override
-	public int calculateRadiusMeters(String method, int minutes) {
+	public int calculateRadiusMeters(String transportation, int minutes) {
 		int wolkSpeed = 80;
-		if("徒歩".equals(method)) {
+		int bicycleSpeed = 250;
+		int bikeSpeed = 500;
+		
+		if("walk".equals(transportation)) {
 			return minutes * wolkSpeed;
+		}else if("bicycle".equals(transportation)) {
+			return minutes * bicycleSpeed;
+		}else if("bike".equals(transportation)) {
+			return minutes * bikeSpeed;
 		}
+		
 		return 0;
 	}
 
